@@ -89,7 +89,7 @@ export default {
   background-color: #2a3139;
   border-radius: 8px;
   flex-basis: 6%;
-  min-height: 90px;
+  min-height: 110px;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -130,14 +130,13 @@ export default {
 }
 
 .upper-span {
-  margin-left: auto;
-  margin-right: 10px;
-  display: inline-block;
+  align-self: flex-start;
   color: #bdc1c6;
+  margin-left: auto;
+  margin-right: 12px;
 
   & ~ span {
-    margin-right: 12px;
-    margin-bottom: 6px;
+    margin: 6px 12px 6px 0;
   }
 }
 
@@ -146,32 +145,32 @@ export default {
 }
 
 .l_shift {
-  background: url("./l_shift-i.png") no-repeat center / contain;
+  background: url("../assets/l_shift-i.png") no-repeat center / contain;
   padding: 14px;
 }
 
 .backspace {
-  background: url("./backspace-i.svg") no-repeat center / contain;
+  background: url("../assets/backspace-i.svg") no-repeat center / contain;
   padding: 14px;
 }
 
 .vector_l {
-  background: url("./left-kar-i.svg") no-repeat center / contain;
+  background: url("../assets/left-kar-i.svg") no-repeat center / contain;
   padding: 14px;
 }
 
 .vector_r {
-  background: url("./right-car-i.svg") no-repeat center / contain;
+  background: url("../assets/right-car-i.svg") no-repeat center / contain;
   padding: 14px;
 }
 
 .space {
-  background: url("./space-i.svg") no-repeat center / contain;
+  background: url("../assets/space-i.svg") no-repeat center / contain;
   padding: 14px;
 }
 
 .enter {
-  background: url("./enter-i.svg") no-repeat center / contain;
+  background: url("../assets/enter-i.svg") no-repeat center / contain;
   padding: 14px;
 }
 </style>

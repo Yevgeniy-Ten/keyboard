@@ -2,11 +2,11 @@
   <div class="keyboard">
     <Keys
       :type="type"
-      v-for="row_id in Object.keys(keys)"
+      v-for="row_id in Object.keys(type === 'number' ? numKeys : keys)"
       :upperMode="upperMode"
       :onClickHandler="onClickHandler"
       :key="row_id"
-      :keys="keys[row_id]"
+      :keys="type === 'number' ? numKeys[row_id] : keys[row_id]"
     />
   </div>
 </template>
@@ -17,61 +17,140 @@ import Keys from "./Keys";
 export default {
   name: "Keyboard",
   props: {
-    onClickHandler: Function,
-    upperMode: Boolean,
     type: String,
+    inputTxT: String,
+    caretPosition: Number,
   },
   components: {
     Keys,
   },
+
+  methods: {
+    onUpperMode() {
+      this.upperMode = !this.upperMode;
+    },
+    onClickHandler(key, event) {
+      if (event === "run") {
+        if (key === "backspace") {
+          if (this.caretPosition > 0) {
+            this.$emit(
+              "onChange",
+              this.inputTxT.slice(0, -1),
+              this.caretPosition - 1
+            );
+            this.intervalId = setInterval(() => {
+              if (this.caretPosition > 0) {
+                this.$emit(
+                  "onChange",
+                  this.inputTxT.slice(0, -1),
+                  this.caretPosition - 1
+                );
+                this.timeForClear -= 50;
+              }
+            }, this.timeForClear);
+          }
+        }
+      } else {
+        clearInterval(this.intervalId);
+        this.timeForClear = 250;
+        if (key.toString().length === 1) {
+          const inputTxtSplitter = this.inputTxT.split("");
+          inputTxtSplitter.splice(
+            this.caretPosition,
+            0,
+            this.upperMode ? key.toString().toUpperCase() : key
+          );
+          this.$emit(
+            "onChange",
+            inputTxtSplitter.join(""),
+            this.caretPosition + 1
+          );
+        } else {
+          if (key === "l_shift") {
+            this.onUpperMode();
+          } else if (key === "backspace") {
+            if (this.caretPosition > 0) {
+              this.$emit(
+                "onChange",
+                this.inputTxT.slice(0, -1),
+                this.caretPosition - 1
+              );
+            } else {
+              this.$emit(
+                "onChange",
+                this.inputTxT.slice(0, -1),
+                this.caretPosition
+              );
+            }
+          } else if (key === "space") {
+            this.$emit("onChange", this.inputTxT + " ", this.caretPosition + 1);
+          } else if (key === "vector_l" || key === "vector_r") {
+            if (key === "vector_l" && this.caretPosition > 0) {
+              this.$emit("onChange", this.inputTxT, this.caretPosition - 1);
+            } else if (
+              key === "vector_r" &&
+              this.caretPosition < this.inputTxT.length
+            ) {
+              this.$emit("onChange", this.inputTxT, this.caretPosition + 1);
+            }
+          }
+        }
+      }
+    },
+  },
   data() {
     return {
-      // keys: {
-      //   0: [
-      //     {
-      //       value: 1,
-      //     },
-      //     {
-      //       value: 2,
-      //     },
-      //     {
-      //       value: 3,
-      //     },
-      //   ],
-      //   1: [
-      //     {
-      //       value: 4,
-      //     },
-      //     {
-      //       value: 5,
-      //     },
-      //     {
-      //       value: 6,
-      //     },
-      //   ],
-      //   2: [
-      //     {
-      //       value: 7,
-      //     },
-      //     {
-      //       value: 8,
-      //     },
-      //     {
-      //       value: 9,
-      //     },
-      //   ],
-      //   3: [
-      //     {
-      //       value: "backspace",
-      //     },
-      //     {
-      //       value: 0,
-      //     },
-      //     {
-      //       value: "enter",
-      //     },
-      //   ],
-      // },
+      isShowed: false,
+      upperMode: false,
+      isRepeat: false,
+      intervalId: 0,
+      timeForClear: 500,
+      numKeys: {
+        0: [
+          {
+            value: 1,
+          },
+          {
+            value: 2,
+          },
+          {
+            value: 3,
+          },
+        ],
+        1: [
+          {
+            value: 4,
+          },
+          {
+            value: 5,
+          },
+          {
+            value: 6,
+          },
+        ],
+        2: [
+          {
+            value: 7,
+          },
+          {
+            value: 8,
+          },
+          {
+            value: 9,
+          },
+        ],
+        3: [
+          {
+            value: "backspace",
+          },
+          {
+            value: 0,
+          },
+          {
+            value: "enter",
+          },
+        ],
+      },
       keys: {
         0: [
           {
